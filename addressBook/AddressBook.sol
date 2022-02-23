@@ -30,21 +30,35 @@ contract AddressBook {
   }
 
   function updateByAlias(string memory _alias, address addr) public {
-      bool aliasFound = false;
       address[] memory addressBook = _addresses[msg.sender];
 
       for(uint i=0; i < addressBook.length; i++) {
           if(addressBook[i] == addr) {
-              aliasFound = true;
               _addresses[msg.sender].push(addr);
               _aliases[msg.sender][addr] = _alias;
           }
 
           else {
-              aliasFound = true;
               _addresses[msg.sender].push(addr);
               _aliases[msg.sender][addr] = _alias;
           }
       }
+  }
+
+  function removeByAddress(address addr) public {
+      uint bookLength = _addresses[msg.sender].length;
+
+      for (uint i=0; i<bookLength; i++) {
+          if(i < bookLength-1 && bookLength > 1 && _addresses[msg.sender][i] == addr){
+              _addresses[msg.sender][i] = _addresses[msg.sender][bookLength-1];
+          }
+
+          delete _addresses[msg.sender][bookLength-1];
+          delete _aliases[msg.sender][addr];
+      }
+  }
+
+  function getAddressBookLength(address addr) public view returns(uint) {
+      return _addresses[addr].length;
   }
 }
